@@ -30,7 +30,7 @@ def alpha_beta_decision(board, turn, ai_level, queue, max_player):
             best_score = score
             best_move = move
 
-    print(f"Nodes evaluated for best move for alphabeta : {node_count} and best score : {best_score}")
+    print(f"Nodes evaluated for best move for alphabeta : {node_count} and best score : {best_score} for player : {max_player}")
 
     queue.put(best_move)
     return best_move
@@ -39,9 +39,9 @@ def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
     node_count += 1
 
     if board.check_victory():
-        return 1000 - 10*depth, node_count
+        return 1000 - depth, node_count
     elif depth == ai_level or not board.get_possible_moves():
-        return board.eval(max_player) - 10*depth, node_count
+        return board.eval(max_player) - depth, node_count
 
     v = np.inf
     for move in board.get_possible_moves():
@@ -60,9 +60,9 @@ def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
     node_count += 1
 
     if board.check_victory():
-        return -1000 + 10*depth, node_count
+        return -1000 + depth, node_count
     elif depth == ai_level or not board.get_possible_moves():
-        return -board.eval(max_player) + 10*depth, node_count
+        return -board.eval(max_player) + depth, node_count
 
     v = -np.inf
     for move in board.get_possible_moves():
@@ -163,6 +163,7 @@ class Connect4:
         return 2 - (self.turn % 2)
 
     def launch(self):
+        print("\nNew game :\n")
         self.board.reinit()
         self.turn = 0
         information['fg'] = 'black'
