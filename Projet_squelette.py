@@ -1,7 +1,5 @@
 import tkinter as tk
 from tkinter import ttk
-import numpy as np
-import random as rnd
 from threading import Thread
 from queue import Queue
 from alphabeta import *
@@ -10,8 +8,8 @@ disk_color = ['white', 'red', 'orange']
 disks = list()
 
 player_type = ['human']
-for i in range(42):
-    player_type.append('AI: alpha-beta level '+str(i+1))
+for level in range(42):
+    player_type.append('AI: alpha-beta level '+str(level+1))
 
 class Board:
     grid = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0],
@@ -162,11 +160,11 @@ window.title("Connect 4")
 canvas1 = tk.Canvas(window, bg="blue", width=width, height=height)
 
 # Drawing the grid
-for i in range(7):
+for x in range(7):
     disks.append(list())
-    for j in range(5, -1, -1):
-        disks[i].append(canvas1.create_oval(row_margin + i * row_width, row_margin + j * row_height, (i + 1) * row_width - row_margin,
-                            (j + 1) * row_height - row_margin, fill='white'))
+    for y in range(5, -1, -1):
+        disks[x].append(canvas1.create_oval(row_margin + x * row_width, row_margin + y * row_height, (x + 1) * row_width - row_margin,
+                            (y + 1) * row_height - row_margin, fill='white'))
 
 
 canvas1.grid(row=0, column=0, columnspan=2)

@@ -11,7 +11,7 @@ def alpha_beta_decision(board, turn, ai_level, queue, max_player):
     for move in board.get_possible_moves():
         new_board = board.copy()
         new_board.add_disk(move, ( max_player + 1) % 2, update_display=False)
-        score, node_count = min_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth)
+        score, node_count = min_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth + 1)
 
         if score > best_score:
             best_score = score
