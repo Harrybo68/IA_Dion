@@ -23,73 +23,57 @@ def alpha_beta_decision(board, turn, ai_level, queue, max_player):
 
     for move in board.get_possible_moves():
         new_board = board.copy()
-        new_board.add_disk(move, turn % 2 +1, update_display=False)
+        new_board.add_disk(move, ( max_player + 1) % 2, update_display=False)
         score, node_count = min_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth)
 
         if score > best_score:
             best_score = score
             best_move = move
 
-    print(f"Nodes evaluated for best move for alphabeta : {node_count}")
+    print(f"Nodes evaluated for best move for alphabeta : {node_count} and best score : {best_score}")
 
     queue.put(best_move)
-    #return best_move
+    return best_move
 
 def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, depth):
     node_count += 1
-    depth = depth + 1
-
-
 
     if board.check_victory():
-        return 1000, node_count
-    elif depth == ai_level:
-        return board.eval(turn % 2 +1), node_count
-    elif not board.get_possible_moves():
-        return 0, node_count
+        return 1000 - 10*depth, node_count
+    elif depth == ai_level or not board.get_possible_moves():
+        return board.eval(max_player) - 10*depth, node_count
 
     v = np.inf
-
     for move in board.get_possible_moves():
         new_board = board.copy()
-        new_board.add_disk(move, turn % 2 +1, update_display=False)
-        max_val, node_count = max_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth)
+        new_board.add_disk(move,  ( max_player + 1) % 2 , update_display=False)
+        max_val, node_count = max_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth + 1)
         v = min(v, max_val)
 
         if v <= alpha:
             return v, node_count
         beta = min(beta, v)
 
-    if node_count % 10000 == 0:
-        print(node_count)
-
     return v, node_count
 
 def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, depth):
     node_count += 1
-    depth = depth + 1
 
     if board.check_victory():
-        return -1000, node_count
-    elif depth == ai_level:
-        return -board.eval(turn % 2 +1), node_count
-    elif not board.get_possible_moves():
-        return 0, node_count
+        return -1000 + 10*depth, node_count
+    elif depth == ai_level or not board.get_possible_moves():
+        return -board.eval(max_player) + 10*depth, node_count
 
     v = -np.inf
-
     for move in board.get_possible_moves():
         new_board = board.copy()
-        new_board.add_disk(move, turn % 2 + 1, update_display=False)
-        min_val, node_count = min_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth)
+        new_board.add_disk(move, max_player, update_display=False)
+        min_val, node_count = min_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth + 1)
         v = max(v, min_val)
 
         if v >= beta:
             return v, node_count
         alpha = max(alpha, v)
-
-    if node_count % 10000 == 0:
-        print(node_count)
 
     return v, node_count
 
@@ -97,7 +81,6 @@ def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
 class Board:
     grid = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0],
                      [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
-
 
     def eval(self, player):
         if self.check_victory():
@@ -117,6 +100,7 @@ class Board:
             for j in range(6):
                 canvas1.itemconfig(disks[i][j], fill=disk_color[0])
 
+
     def get_possible_moves(self):
         possible_moves = list()
         if self.grid[3][5] == 0:
@@ -127,6 +111,9 @@ class Board:
             if self.grid[3 - shift_from_center][5] == 0:
                 possible_moves.append(3 - shift_from_center)
         return possible_moves
+
+    """def get_possible_moves(self):
+        return [col for col in range(7) if self.grid[col][5] == 0]"""
 
     def add_disk(self, column, player, update_display=True):
         for j in range(6):
