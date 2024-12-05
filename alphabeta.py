@@ -54,8 +54,6 @@ def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
 def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, depth):
     node_count += 1
 
-    print(f"Evaluating nodes for turn : {turn} and player : {max_player}")
-
     if board.check_victory():
         return - winner_value, node_count
     elif not board.get_possible_moves():
