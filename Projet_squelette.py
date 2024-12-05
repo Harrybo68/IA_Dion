@@ -33,7 +33,7 @@ class Board:
                 canvas1.itemconfig(disks[i][j], fill=disk_color[0])
 
 
-    """def get_possible_moves(self):
+    def get_possible_moves(self):
         possible_moves = list()
         if self.grid[3][5] == 0:
             possible_moves.append(3)
@@ -42,10 +42,10 @@ class Board:
                 possible_moves.append(3 + shift_from_center)
             if self.grid[3 - shift_from_center][5] == 0:
                 possible_moves.append(3 - shift_from_center)
-        return possible_moves"""
+        return possible_moves
 
-    def get_possible_moves(self):
-        return [col for col in range(7) if self.grid[col][5] == 0]
+    """def get_possible_moves(self):
+        return [col for col in range(7) if self.grid[col][5] == 0]"""
 
     def add_disk(self, column, player, update_display=True):
         for j in range(6):
