@@ -1,5 +1,8 @@
 import numpy as np
 
+winner_value = 150
+draw_value = 0
+
 def alpha_beta_decision(board, turn, ai_level, queue, max_player):
     node_count = 0
     alpha = -np.inf
@@ -10,7 +13,7 @@ def alpha_beta_decision(board, turn, ai_level, queue, max_player):
 
     for move in board.get_possible_moves():
         new_board = board.copy()
-        new_board.add_disk(move, ( max_player + 1) % 2, update_display=False)
+        new_board.add_disk(move, turn % 2 + 1 , update_display=False)
         score, node_count = min_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth + 1)
 
         if score > best_score:
@@ -25,13 +28,19 @@ def alpha_beta_decision(board, turn, ai_level, queue, max_player):
 def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, depth):
     node_count += 1
 
-    if depth == ai_level or not board.get_possible_moves() or board.check_victory():
-        return board.eval(max_player) - depth, node_count
+    if board.check_victory():
+        return winner_value, node_count
+    elif not board.get_possible_moves():
+        return draw_value, node_count
+    if depth == ai_level:
+        #return board.eval(max_player) - depth, node_count
+        return  board.eval(max_player), node_count
+
 
     v = np.inf
     for move in board.get_possible_moves():
         new_board = board.copy()
-        new_board.add_disk(move,  ( max_player + 1) % 2 , update_display=False)
+        new_board.add_disk(move,  turn % 2 + 1 , update_display=False)
         max_val, node_count = max_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth + 1)
         v = min(v, max_val)
 
@@ -44,13 +53,18 @@ def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
 def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, depth):
     node_count += 1
 
-    if depth == ai_level or not board.get_possible_moves() or board.check_victory():
-        return -board.eval(max_player) + depth, node_count
+    if board.check_victory():
+        return - winner_value, node_count
+    elif not board.get_possible_moves():
+        return draw_value, node_count
+    if depth == ai_level:
+        # return board.eval(max_player) + depth, node_count
+        return - board.eval(max_player), node_count
 
     v = -np.inf
     for move in board.get_possible_moves():
         new_board = board.copy()
-        new_board.add_disk(move, max_player, update_display=False)
+        new_board.add_disk(move, turn % 2 + 1, update_display=False)
         min_val, node_count = min_value_ab(new_board, turn + 1, ai_level, alpha, beta, node_count, max_player, depth + 1)
         v = max(v, min_val)
 
