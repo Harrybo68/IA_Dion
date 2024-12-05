@@ -25,9 +25,7 @@ def alpha_beta_decision(board, turn, ai_level, queue, max_player):
 def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, depth):
     node_count += 1
 
-    if board.check_victory():
-        return 1000 - depth, node_count
-    elif depth == ai_level or not board.get_possible_moves():
+    if depth == ai_level or not board.get_possible_moves() or board.check_victory():
         return board.eval(max_player) - depth, node_count
 
     v = np.inf
@@ -46,9 +44,7 @@ def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
 def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, depth):
     node_count += 1
 
-    if board.check_victory():
-        return -1000 + depth, node_count
-    elif depth == ai_level or not board.get_possible_moves():
+    if depth == ai_level or not board.get_possible_moves() or board.check_victory():
         return -board.eval(max_player) + depth, node_count
 
     v = -np.inf
