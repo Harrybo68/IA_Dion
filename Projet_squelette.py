@@ -16,9 +16,13 @@ class Board:
                      [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0]])
 
     def eval(self, player):
+        if self.check_victory():
+            return winner_value
         return 0
 
     def mock_eval(self, player):
+        if self.check_victory():
+            return winner_value
         return 0
 
     def copy(self):
