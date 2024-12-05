@@ -18,12 +18,114 @@ class Board:
     def eval(self, player):
         if self.check_victory():
             return winner_value
-        return 0
+        return self.calculate_threats(player)
+
 
     def mock_eval(self, player):
         if self.check_victory():
             return winner_value
         return 0
+
+
+    def calculate_threats(self, player):
+        threat_score = 0
+
+        # Vérification des alignements horizontaux possibles
+        for row in range(6):
+            for col in range(4):  # Vérifier les fenêtres de 4 colonnes
+                window = self.grid[col:col + 4, row]
+                if self.is_alignment_possible(window, player):
+                    threat_score += self.evaluate_window(window, player)
+
+        # Vérification des alignements verticaux possibles
+        for col in range(7):
+            for row in range(3):  # Vérifier les fenêtres de 4 lignes
+                window = self.grid[col, row:row + 4]
+                if self.is_alignment_possible(window, player):
+                    threat_score += self.evaluate_window(window, player)
+
+        # Vérification des alignements diagonaux possibles (de gauche à droite)
+        for col in range(4):
+            for row in range(3):
+                window = [self.grid[col + i][row + i] for i in range(4)]
+                if self.is_alignment_possible(window, player):
+                    threat_score += self.evaluate_window(window, player)
+
+        # Vérification des alignements diagonaux possibles (de droite à gauche)
+        for col in range(4):
+            for row in range(3, 6):
+                window = [self.grid[col + i][row - i] for i in range(4)]
+                if self.is_alignment_possible(window, player):
+                    threat_score += self.evaluate_window(window, player)
+
+        return threat_score
+
+    def is_opponent_threat(self, column, player):
+        """
+        Vérifie si jouer dans la colonne donnée permettrait à l'adversaire de gagner.
+        """
+        opponent = (player % 2) + 1
+
+        # Simuler le coup dans la colonne
+        temp_board = self.copy()
+        temp_board.add_disk(column, player, update_display=False)
+
+        # Vérification des diagonales gauche-droite
+        for col in range(4):
+            for row in range(3):
+                window = [temp_board.grid[col + i][row + i] for i in range(4)]
+                if window.count(opponent) == 3 and window.count(0) == 1:
+                    return True
+
+        # Vérification des diagonales droite-gauche
+        for col in range(4):
+            for row in range(3, 6):
+                window = [temp_board.grid[col + i][row - i] for i in range(4)]
+                if window.count(opponent) == 3 and window.count(0) == 1:
+                    return True
+
+        return False
+
+    def is_alignment_possible(self, window, player):
+        empty_count = np.count_nonzero(window == 0)  # Cases vides
+        opponent_count = np.count_nonzero(window == (player % 2) + 1)  # Jetons adverses
+
+        # Un alignement est possible si :
+        # - Il y a au maximum 1 jeton adverse.
+        # - Les cases vides dans la fenêtre sont accessibles.
+        if opponent_count > 1:
+            return False
+
+        for idx, cell in enumerate(window):
+            if cell == 0:  # Vérifier la gravité pour les cases vides
+                # Trouver la position (colonne et ligne) dans la grille
+                col = idx
+                row = np.where(window == cell)[0][0]
+                # Si une case vide n'est pas en bas ou supportée, ce n'est pas un alignement possible
+                if row > 0 and self.grid[col][row - 1] == 0:
+                    return False
+
+        return True
+
+    def evaluate_window(self, window, player):
+        score = 0
+        opponent = (player % 2) + 1
+
+        player_count = np.count_nonzero(window == player)
+        opponent_count = np.count_nonzero(window == opponent)
+        empty_count = np.count_nonzero(window == 0)
+
+        if player_count == 4:
+            score += 100
+        elif player_count == 3 and empty_count == 1:
+            score += 10
+        elif player_count == 2 and empty_count == 2:
+            score += 5
+
+        if opponent_count == 3 and empty_count == 1:
+            score -= 8
+
+        return score
 
     def copy(self):
         new_board = Board()
