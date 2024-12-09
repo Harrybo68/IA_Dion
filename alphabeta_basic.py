@@ -1,6 +1,6 @@
 import numpy as np
 
-winner_value = 150
+winner_value = 500
 draw_value = 0
 
 def alpha_beta_decision_basic(board, turn, ai_level, queue, max_player):

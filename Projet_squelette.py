@@ -25,12 +25,10 @@ class Board:
             return winner_value
         return self.calculate_threats(player)
 
-
     def mock_eval(self, player):
         if self.check_victory():
             return winner_value
         return 0
-
 
     def calculate_threats(self, player):
         threat_score = 0
@@ -65,31 +63,25 @@ class Board:
 
         return threat_score
 
-    def is_opponent_threat(self, column, player):
-        """
-        Vérifie si jouer dans la colonne donnée permettrait à l'adversaire de gagner.
-        """
+    def evaluate_window(self, window, player):
+        score = 0
         opponent = (player % 2) + 1
 
-        # Simuler le coup dans la colonne
-        temp_board = self.copy()
-        temp_board.add_disk(column, player, update_display=False)
+        player_count = np.count_nonzero(window == player)
+        opponent_count = np.count_nonzero(window == opponent)
+        empty_count = np.count_nonzero(window == 0)
 
-        # Vérification des diagonales gauche-droite
-        for col in range(4):
-            for row in range(3):
-                window = [temp_board.grid[col + i][row + i] for i in range(4)]
-                if window.count(opponent) == 3 and window.count(0) == 1:
-                    return True
+        if player_count == 3 and empty_count == 1:
+            score += 50
+        elif player_count == 2 and empty_count == 2:
+            score += 25
 
-        # Vérification des diagonales droite-gauche
-        for col in range(4):
-            for row in range(3, 6):
-                window = [temp_board.grid[col + i][row - i] for i in range(4)]
-                if window.count(opponent) == 3 and window.count(0) == 1:
-                    return True
+        if opponent_count == 3 and empty_count == 1:
+            score -= 50
+        elif opponent_count == 2 and empty_count == 2:
+            score -= 25
 
-        return False
+        return score
 
     def is_alignment_possible(self, window, player):
         empty_count = np.count_nonzero(window == 0)  # Cases vides
@@ -112,25 +104,33 @@ class Board:
 
         return True
 
-    def evaluate_window(self, window, player):
-        score = 0
+    """
+    def is_opponent_threat(self, column, player):
+    
+        #Vérifie si jouer dans la colonne donnée permettrait à l'adversaire de gagner.
+        
         opponent = (player % 2) + 1
 
-        player_count = np.count_nonzero(window == player)
-        opponent_count = np.count_nonzero(window == opponent)
-        empty_count = np.count_nonzero(window == 0)
+        # Simuler le coup dans la colonne
+        temp_board = self.copy()
+        temp_board.add_disk(column, player, update_display=False)
 
-        if player_count == 4:
-            score += 100
-        elif player_count == 3 and empty_count == 1:
-            score += 10
-        elif player_count == 2 and empty_count == 2:
-            score += 5
+        # Vérification des diagonales gauche-droite
+        for col in range(4):
+            for row in range(3):
+                window = [temp_board.grid[col + i][row + i] for i in range(4)]
+                if window.count(opponent) == 3 and window.count(0) == 1:
+                    return True
 
-        if opponent_count == 3 and empty_count == 1:
-            score -= 8
+        # Vérification des diagonales droite-gauche
+        for col in range(4):
+            for row in range(3, 6):
+                window = [temp_board.grid[col + i][row - i] for i in range(4)]
+                if window.count(opponent) == 3 and window.count(0) == 1:
+                    return True
 
-        return score
+        return False
+    """
 
     def copy(self):
         new_board = Board()
