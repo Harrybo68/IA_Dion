@@ -255,8 +255,6 @@ class Connect4:
             self.current_player()) + " is playing"
         if self.players[self.current_player() - 1] != 0:
             self.human_turn = False
-            print(self.current_player())
-            print(self.players[self.current_player() - 1])
             if self.players[self.current_player() - 1] < 43:
                 self.ai_turn(self.players[self.current_player() - 1])
             else :
