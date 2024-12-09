@@ -1,8 +1,10 @@
 import tkinter as tk
+import numpy as np
 from tkinter import ttk
 from threading import Thread
 from queue import Queue
-from alphabeta import *
+from alphabeta import alpha_beta_decision, winner_value, draw_value
+from alphabeta_basic import alpha_beta_decision_basic
 
 disk_color = ['white', 'red', 'orange']
 disks = list()
@@ -10,6 +12,9 @@ disks = list()
 player_type = ['human']
 for level in range(42):
     player_type.append('AI: alpha-beta level '+str(level+1))
+
+for level in range(42):
+    player_type.append('AI: al-bet basic level '+str(level+1))
 
 class Board:
     grid = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0],
@@ -225,6 +230,10 @@ class Connect4:
         Thread(target=alpha_beta_decision, args=(self.board, self.turn, ai_level, self.ai_move, self.current_player(),)).start()
         self.ai_wait_for_move()
 
+    def ai_turn_basic(self, ai_level):
+        Thread(target=alpha_beta_decision_basic, args=(self.board, self.turn, ai_level, self.ai_move, self.current_player(),)).start()
+        self.ai_wait_for_move()
+
     def ai_wait_for_move(self):
         if not self.ai_move.empty():
             self.move(self.ai_move.get())
@@ -246,7 +255,13 @@ class Connect4:
             self.current_player()) + " is playing"
         if self.players[self.current_player() - 1] != 0:
             self.human_turn = False
-            self.ai_turn(self.players[self.current_player() - 1])
+            print(self.current_player())
+            print(self.players[self.current_player() - 1])
+            if self.players[self.current_player() - 1] < 43:
+                self.ai_turn(self.players[self.current_player() - 1])
+            else :
+                self.ai_turn_basic(self.players[self.current_player() - 1] - 42)
+
         else:
             self.human_turn = True
 
