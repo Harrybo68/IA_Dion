@@ -28,7 +28,7 @@ class Board:
     def mock_eval(self, player):
         if self.check_victory():
             return winner_value
-        return 0
+        return draw_value
 
     def calculate_threats(self, player):
         threat_score = 0
@@ -68,23 +68,16 @@ class Board:
         opponent = (player % 2) + 1
 
         player_count = np.count_nonzero(window == player)
-        opponent_count = np.count_nonzero(window == opponent)
         empty_count = np.count_nonzero(window == 0)
 
         if player_count == 3 and empty_count == 1:
-            score += 150
+            score += 250
         elif player_count == 2 and empty_count == 2:
             score += 50
-
-        if opponent_count == 3 and empty_count == 1:
-            score -= 150
-        elif opponent_count == 2 and empty_count == 2:
-            score -= 50
 
         return score
 
     def is_alignment_possible(self, window, player):
-        empty_count = np.count_nonzero(window == 0)  # Cases vides
         opponent_count = np.count_nonzero(window == (player % 2) + 1)  # Jetons adverses
 
         # Un alignement est possible si :
