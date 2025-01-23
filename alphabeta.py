@@ -33,11 +33,11 @@ def min_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
     possible_moves = board.get_possible_moves()
 
     if board.check_victory():
-        return winner_value - depth, node_count
+        return winner_value, node_count
     elif not possible_moves:
-        return draw_value - depth, node_count
+        return draw_value, node_count
     elif depth == ai_level:
-        return board.eval(max_player) - depth, node_count
+        return board.eval(max_player), node_count
 
     v = np.inf
     for move in possible_moves:
@@ -58,11 +58,11 @@ def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
     possible_moves = board.get_possible_moves()
 
     if board.check_victory():
-        return - winner_value + depth, node_count
+        return - winner_value, node_count
     elif not possible_moves:
-        return draw_value + depth, node_count
+        return draw_value, node_count
     elif depth == ai_level:
-        return - board.eval(max_player) + depth, node_count
+        return - board.eval(max_player), node_count
 
     v = -np.inf
     for move in possible_moves:
