@@ -14,7 +14,7 @@ for level in range(42):
     player_type.append('AI: alpha-beta level '+str(level+1))
 
 for level in range(42):
-    player_type.append('AI: al-bet basic level '+str(level+1))
+    player_type.append('AI: alpha-beta mock lvl '+str(level+1))
 
 class Board:
     grid = np.array([[0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0],
@@ -292,12 +292,12 @@ information.grid(row=1, column=0, columnspan=2)
 
 label_player1 = tk.Label(window, text="Player 1: ")
 label_player1.grid(row=2, column=0)
-combobox_player1 = ttk.Combobox(window, state='readonly')
+combobox_player1 = ttk.Combobox(window, state='readonly', width = 30)
 combobox_player1.grid(row=2, column=1)
 
 label_player2 = tk.Label(window, text="Player 2: ")
 label_player2.grid(row=3, column=0)
-combobox_player2 = ttk.Combobox(window, state='readonly')
+combobox_player2 = ttk.Combobox(window, state='readonly', width = 30)
 combobox_player2.grid(row=3, column=1)
 
 combobox_player1['values'] = player_type
