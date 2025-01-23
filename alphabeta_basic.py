@@ -1,6 +1,6 @@
 import numpy as np
 
-winner_value = 500
+winner_value = 1500
 draw_value = 0
 
 def alpha_beta_decision_basic(board, turn, ai_level, queue, max_player):
@@ -61,7 +61,7 @@ def max_value_ab(board, turn, ai_level, alpha, beta, node_count, max_player, dep
     if board.check_victory():
         return - winner_value, node_count
     elif not possible_moves:
-        return draw_value, node_count
+        return - draw_value, node_count
     elif depth == ai_level:
         return - board.mock_eval(max_player), node_count
 

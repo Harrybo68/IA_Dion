@@ -72,14 +72,14 @@ class Board:
         empty_count = np.count_nonzero(window == 0)
 
         if player_count == 3 and empty_count == 1:
-            score += 50
+            score += 150
         elif player_count == 2 and empty_count == 2:
-            score += 25
+            score += 50
 
         if opponent_count == 3 and empty_count == 1:
-            score -= 50
+            score -= 150
         elif opponent_count == 2 and empty_count == 2:
-            score -= 25
+            score -= 50
 
         return score
 
@@ -104,34 +104,6 @@ class Board:
 
         return True
 
-    """
-    def is_opponent_threat(self, column, player):
-    
-        #Vérifie si jouer dans la colonne donnée permettrait à l'adversaire de gagner.
-        
-        opponent = (player % 2) + 1
-
-        # Simuler le coup dans la colonne
-        temp_board = self.copy()
-        temp_board.add_disk(column, player, update_display=False)
-
-        # Vérification des diagonales gauche-droite
-        for col in range(4):
-            for row in range(3):
-                window = [temp_board.grid[col + i][row + i] for i in range(4)]
-                if window.count(opponent) == 3 and window.count(0) == 1:
-                    return True
-
-        # Vérification des diagonales droite-gauche
-        for col in range(4):
-            for row in range(3, 6):
-                window = [temp_board.grid[col + i][row - i] for i in range(4)]
-                if window.count(opponent) == 3 and window.count(0) == 1:
-                    return True
-
-        return False
-    """
-
     def copy(self):
         new_board = Board()
         new_board.grid = np.array(self.grid, copy=True)
@@ -154,9 +126,6 @@ class Board:
             if self.grid[3 - shift_from_center][5] == 0:
                 possible_moves.append(3 - shift_from_center)
         return possible_moves
-
-    """def get_possible_moves(self):
-        return [col for col in range(7) if self.grid[col][5] == 0]"""
 
     def add_disk(self, column, player, update_display=True):
         for j in range(6):
